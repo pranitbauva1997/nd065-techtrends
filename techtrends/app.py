@@ -22,6 +22,11 @@ def get_post(post_id):
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
+# Define healthcheck endpoint
+@app.route('/healthz')
+def healthz():
+    return {"result": "OK - healthy"}
+
 # Define the main route of the web application 
 @app.route('/')
 def index():
