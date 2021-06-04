@@ -1,4 +1,5 @@
 import sqlite3
+import logging
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
@@ -11,10 +12,14 @@ class DB:
     # Function to get a database connection.
     # This function connects to database with the name `database.db`
     def new_db_connection(self):
-        connection = sqlite3.connect(self.DB_NAME)
+        try:
+            connection = sqlite3.connect(self.DB_NAME)
+        except Exception as e:
+            logging.error("Couldn't connect to DB", exc_info = True)
+            return None
+
         connection.row_factory = sqlite3.Row
         self.no_of_connections = self.no_of_connections + 1
-        print(self.no_of_connections)
         return connection
 
     # Function to close a database connection
@@ -26,38 +31,82 @@ class DB:
     # and no of concurrent database connections
     def get_db_metrics(self):
         connection = self.new_db_connection()
-        post_count = connection.execute('SELECT COUNT(id) FROM posts').fetchone()
-        self.close_db_connection(connection)
-        return post_count['COUNT(id)'], self.no_of_connections
+        if connection is None:
+            return None
+
+        post_count = None
+        no_of_connections = None
+        try:
+            count = connection.execute('SELECT COUNT(id) FROM posts').fetchone()
+            post_count = count['COUNT(id)']
+            no_of_connections = self.no_of_connections
+        except Exception as e:
+            logging.error("Couldn't query posts table", exc_info = True)
+        finally:
+            self.close_db_connection(connection)
+
+        return post_count, no_of_connections
 
     # Function to get a post using its ID from database
     def get_post(self, post_id):
         connection = self.new_db_connection()
-        post = connection.execute('SELECT * FROM posts WHERE id = ?',
-                        (post_id,)).fetchone()
-        self.close_db_connection(connection)
+        if connection is None:
+            return None
+
+        post = None
+        try:
+            post = connection.execute('SELECT * FROM posts WHERE id = ?',
+                                      (post_id,)).fetchone()
+            if post is not None:
+                logging.info(f"Article '{post['title']}' retrieved")
+            else:
+                logging.info(f"Article with id = {post_id} is not found")
+        except Exception as e:
+            logging.error(f"Couldn't get the post with post_id = {post_id};", exc_info = True)
+        finally:
+            self.close_db_connection(connection)
+
         return post
 
     # Function to get all posts from database
     def get_all_posts(self):
         connection = self.new_db_connection()
-        posts = connection.execute('SELECT * FROM posts').fetchall()
-        self.close_db_connection(connection)
+        if connection is None:
+            return None
+
+        posts = None
+        try:
+            posts = connection.execute('SELECT * FROM posts').fetchall()
+        except Exception as e:
+            logging.error("Couldn't get all posts", exc_info = True)
+        finally:
+            self.close_db_connection(connection)
+
         return posts
 
     # Function to insert a post (title, content) into database
     def insert_post(self, title, content):
         connection = self.new_db_connection()
-        connection.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
-                         (title, content))
-        connection.commit()
-        self.close_db_connection()
+        if connection is None:
+            return None
+
+        try:
+            connection.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
+                               (title, content))
+            connection.commit()
+            logging.info(f"Article with title '{title}' created")
+        except Exception as e:
+            logging.error("Couldn't insert the post", exc_info = True)
+        finally:
+            self.close_db_connection(connection)
 
 
 # Define the Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 db = DB()
+
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(module)s:%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
 # Define healthcheck endpoint
 @app.route('/healthz')
@@ -77,7 +126,10 @@ def metrics():
 @app.route('/')
 def index():
     posts = db.get_all_posts()
-    return render_template('index.html', posts=posts)
+    if posts is None:
+        return render_template('404.html'), 404
+    else:
+        return render_template('index.html', posts=posts)
 
 # Define how each individual article is rendered 
 # If the post ID is not found a 404 page is shown
@@ -92,6 +144,7 @@ def post(post_id):
 # Define the About Us page
 @app.route('/about')
 def about():
+    logging.info("Retrieving 'About Us' page")
     return render_template('about.html')
 
 # Define the post creation functionality 
