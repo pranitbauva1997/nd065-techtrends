@@ -4,7 +4,7 @@ docker build . -t techtrends
 
 ## Docker commands used to run the application
 # TODO: insert the docker run command
-docker run -p 7111:3111 techtrends
+docker run -d -p 7111:3111 techtrends
 
 ## Docker commands used to get the application logs
 # TODO: insert the docker logs command
