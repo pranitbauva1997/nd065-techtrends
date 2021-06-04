@@ -58,11 +58,11 @@ class DB:
             post = connection.execute('SELECT * FROM posts WHERE id = ?',
                                       (post_id,)).fetchone()
             if post is not None:
-                logging.info(f"Article '{post['title']}' retrieved")
+                logging.info("Article '{0}' retrieved".format(post['title']))
             else:
-                logging.info(f"Article with id = {post_id} is not found")
+                logging.info("Article with id = {0} is not found".format(post_id))
         except Exception as e:
-            logging.error(f"Couldn't get the post with post_id = {post_id};", exc_info = True)
+            logging.error("Couldn't get the post with post_id = {0};".format(post_id), exc_info = True)
         finally:
             self.close_db_connection(connection)
 
@@ -94,7 +94,7 @@ class DB:
             connection.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
                                (title, content))
             connection.commit()
-            logging.info(f"Article with title '{title}' created")
+            logging.info("Article with title '{0}' created".format(title))
         except Exception as e:
             logging.error("Couldn't insert the post", exc_info = True)
         finally:
