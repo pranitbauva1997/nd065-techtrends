@@ -1,0 +1,12 @@
+name: TechTrends - Package with Docker
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Docker Image
+        run: docker build . -t techtrends
