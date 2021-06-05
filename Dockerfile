@@ -1,9 +1,9 @@
 FROM python:2.7
 
 # Update the software package list and do necessary upgrades
-RUN apt-get update --fix-missing || exit 0
-RUN apt-get upgrade -y
-RUN apt-get install vim curl wget -y
+RUN apt-get update --fix-missing \
+    && apt-get upgrade -y \
+    && apt-get install vim curl wget -y
 
 WORKDIR /app
 COPY techtrends/requirements.txt /app/requirements.txt
