@@ -106,7 +106,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 db = DB()
 
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(module)s:%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+logging.basicConfig(level=logging.DEBUG, filename="app.log",
+                    format='%(levelname)s:%(module)s:%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
 # Define healthcheck endpoint
 @app.route('/healthz')
