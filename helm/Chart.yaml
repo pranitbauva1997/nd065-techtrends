@@ -1,0 +1,12 @@
+apiVersion: v1
+name:  techtrends
+Description: Deploy TechTrends application
+
+Keywords:
+- techtrends
+
+version: 1.0.0
+
+maintainers:
+- name: Pranit Bauva
+  email: pranit.bauva@gmail.com
