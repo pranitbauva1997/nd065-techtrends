@@ -8,13 +8,13 @@ metadata:
 spec:
   source:
     path: helm
+    repoURL: https://github.com/pranitbauva1997/techtrends.git
+    targetRevision: HEAD
     helm:
       valueFiles:
         - values-staging.yaml
-    repoURL: https://github.com/pranitbauva1997/techtrends.git
-    targetRevision: HEAD
 
   destination:
-    namespace: staging
+    namespace: default
     server: https://kubernetes.default.svc
   project: default
