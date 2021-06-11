@@ -5,3 +5,4 @@ database.db
 app.log
 
 .vagrant
+.DS_Store
