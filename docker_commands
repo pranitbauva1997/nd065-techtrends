@@ -7,7 +7,29 @@ docker build . -t techtrends
 docker run -d -p 7111:3111 techtrends
 
 ## Docker commands used to get the application logs
-# TODO: insert the docker logs command
+# Commenting out the following files because there are some scenarios
+# where it might not run properly.
+
+# Run the following command and get the container ID
+# docker ps
+
+# Run the following command to get the logs
+# docker logs 279cd3aea9dd
 
 ## Logs from the container running the TechTrends application
-# TODO: paste logs from the Docker container 
+#  * Serving Flask app "app" (lazy loading)
+# * Environment: production
+#   WARNING: This is a development server. Do not use it in a production deployment.
+#   Use a production WSGI server instead.
+# * Debug mode: off
+# INFO:_internal:11-Jun-21 21:03:12 -  * Running on http://0.0.0.0:3111/ (Press CTRL+C to quit)
+# INFO:_internal:11-Jun-21 21:03:23 - 172.17.0.1 - - [11/Jun/2021 21:03:23] "GET / HTTP/1.1" 200 -
+# INFO:_internal:11-Jun-21 21:03:23 - 172.17.0.1 - - [11/Jun/2021 21:03:23] "GET /static/css/main.css HTTP/1.1" 200 -
+# INFO:_internal:11-Jun-21 21:03:24 - 172.17.0.1 - - [11/Jun/2021 21:03:24] "GET /favicon.ico HTTP/1.1" 404 -
+# INFO:app:11-Jun-21 21:05:29 - Article '2020 CNCF Annual Report' retrieved
+# INFO:_internal:11-Jun-21 21:05:29 - 172.17.0.1 - - [11/Jun/2021 21:05:29] "GET /1 HTTP/1.1" 200 -
+# INFO:_internal:11-Jun-21 21:05:33 - 172.17.0.1 - - [11/Jun/2021 21:05:33] "GET /create HTTP/1.1" 200 -
+# INFO:app:11-Jun-21 21:05:40 - Article with title 'new post' created
+# INFO:_internal:11-Jun-21 21:05:40 - 172.17.0.1 - - [11/Jun/2021 21:05:40] "POST /create HTTP/1.1" 302 -
+# INFO:_internal:11-Jun-21 21:05:40 - 172.17.0.1 - - [11/Jun/2021 21:05:40] "GET / HTTP/1.1" 200 -
+# INFO:_internal:11-Jun-21 21:05:49 - 172.17.0.1 - - [11/Jun/2021 21:05:49] "GET /metrics HTTP/1.1" 200 -
