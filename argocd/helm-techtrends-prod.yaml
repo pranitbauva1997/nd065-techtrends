@@ -11,7 +11,7 @@ spec:
     helm:
       valueFiles:
         - values-prod.yaml
-    repoURL: https://github.com/pranitbauva1997/techtrends.git
+    repoURL: https://github.com/pranitbauva1997/nd065-techtrends.git
     targetRevision: HEAD
 
   destination:
